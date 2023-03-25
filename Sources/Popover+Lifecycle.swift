@@ -5,7 +5,7 @@
 //  Created by A. Zheng (github.com/aheze) on 1/4/22.
 //  Copyright © 2022 A. Zheng. All rights reserved.
 //
-#if os(iOS)
+
 import SwiftUI
 
 /**
@@ -65,12 +65,6 @@ public extension Popover {
             }
 
             window.addSubview(container)
-        }
-
-        if attributes.source == .stayAboveWindows {
-            context.windowSublayersKeyValueObservationToken = window.layer.observe(\.sublayers) { _, _ in
-                window.bringSubviewToFront(container)
-            }
         }
 
         /// Hang on to the container for future dismiss/replace actions.
@@ -133,9 +127,6 @@ public extension Popover {
             /// Use the same `UIViewController` presenting the previous popover, so we animate the popover in the same container.
             newPopover.context.presentedPopoverContainer = oldContext.presentedPopoverContainer
 
-            /// Set the popover as a replacement.
-            newPopover.context.isReplacement = true
-
             /// Use same ID so that SwiftUI animates the change.
             newPopover.context.id = oldContext.id
 
@@ -159,22 +150,6 @@ public extension UIResponder {
     /// Dismiss a popover. Convenience method for `Popover.dismiss(transaction:)`.
     func dismiss(_ popover: Popover) {
         popover.dismiss()
-    }
-
-    /**
-     Get a currently-presented popover with a tag. Returns `nil` if no popover with the tag was found.
-     - parameter tag: The tag of the popover to look for.
-     */
-    func popover(tagged tag: AnyHashable) -> Popover? {
-        return popoverModel.popover(tagged: tag)
-    }
-
-    /**
-     Remove all popovers, or optionally the ones tagged with a `tag` that you supply.
-     - parameter tag: If this isn't nil, only remove popovers tagged with this.
-     */
-    func dismissAllPopovers(with tag: AnyHashable? = nil) {
-        popoverModel.removeAllPopovers(with: tag)
     }
 }
 
@@ -201,4 +176,3 @@ extension UIView {
         }
     }
 }
-#endif

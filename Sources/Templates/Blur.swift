@@ -6,7 +6,6 @@
 //  Copyright © 2022 A. Zheng. All rights reserved.
 //
 
-#if os(iOS)
 import SwiftUI
 
 public extension Templates {
@@ -20,13 +19,12 @@ public extension Templates {
             self.style = style
         }
 
-        public func makeUIView(context: Context) -> UIVisualEffectView {
+        public func makeUIView(context _: UIViewRepresentableContext<Self>) -> UIVisualEffectView {
             UIVisualEffectView()
         }
 
-        public func updateUIView(_ uiView: UIVisualEffectView, context: Context) {
+        public func updateUIView(_ uiView: UIVisualEffectView, context _: UIViewRepresentableContext<Self>) {
             uiView.effect = UIBlurEffect(style: style)
         }
     }
 }
-#endif

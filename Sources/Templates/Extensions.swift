@@ -6,7 +6,6 @@
 //  Copyright © 2022 A. Zheng. All rights reserved.
 //
 
-#if os(iOS)
 import SwiftUI
 
 // MARK: - Shadows
@@ -20,13 +19,6 @@ public extension View {
             x: shadow.x,
             y: shadow.y
         )
-    }
-
-    /// A convenient way to apply a nullable shadow.
-    @ViewBuilder func popoverShadowIfNeeded(shadow: Templates.Shadow?) -> some View {
-        if let shadow = shadow {
-            popoverShadow(shadow: shadow)
-        }
     }
 }
 
@@ -349,4 +341,3 @@ extension ForEach: DynamicViewContentProvider where Content: View {
         return AnyView(content(data[dataIndex]))
     }
 }
-#endif

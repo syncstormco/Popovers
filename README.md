@@ -10,7 +10,7 @@ A library to present popovers.
 - Highly customizable API that's super simple — just add `.popover`.
 - Drop-in replacement for iOS 14's `Menu` that works on iOS 13.
 - SwiftUI-based core for a lightweight structure. 0 dependencies.
-- It's 2023 — about time that popovers got interesting!
+- It's 2022 — about time that popovers got interesting!
 
 ## Showroom
 
@@ -89,7 +89,7 @@ Notification
 </table>
 
 ## Example
-Includes ~20 popover examples. [Download](https://github.com/aheze/Popovers/tree/main/Examples)
+I wrote the example app with Swift Playgrounds 4, so you can run it right on your iPad. If you're using a Mac, download the Xcode version. [Download for Swift Playgrounds 4](https://github.com/aheze/Popovers/raw/main/Examples/PopoversPlaygroundsApp.swiftpm.zip) • [Download for Xcode](https://github.com/aheze/Popovers/raw/main/Examples/PopoversXcodeApp.zip)
 
 ![Example app](Assets/ExampleApp.png)
 
@@ -919,27 +919,21 @@ Manage a popover's z-axis level by attaching [`.zIndex(_:)`](https://developer.a
 
 
 ## Community
+### Author
+Popovers is made by [aheze](https://github.com/aheze).
 
-Author | Contributing | Need Help?
---- | --- | ---
-Popovers is made by [aheze](https://github.com/aheze). | All contributions are welcome. Just [fork](https://github.com/aheze/Popovers/fork) the repo, then make a pull request. | Open an [issue](https://github.com/aheze/Popovers/issues) or join the [Discord server](https://discord.com/invite/Pmq8fYcus2). You can also ping me on [Twitter](https://twitter.com/aheze0). Or read the source code — there's lots of comments.
+### Contributing
+All contributions are welcome. Just [fork](https://github.com/aheze/Popovers/fork) the repo, then make a pull request.
 
-### Apps Using Popovers
-
-[Find](http://getfind.app) is an app that lets you find text in real life. Popovers is used for the quick tips and as a replacements for menus — download to check it out!
-
-<a href="http://getfind.app">
-  <img src="https://raw.githubusercontent.com/aheze/OpenFind/main/Assets/v3%20Thumbnail.jpg" height="300" alt="Find App">
-</a>
-
-If you have an app that uses Popovers, just make a PR or [message me](https://twitter.com/aheze0).
+### Need Help?
+Open an [issue](https://github.com/aheze/Popovers/issues) or join the [Discord server](https://discord.com/invite/Pmq8fYcus2). You can also ping me on [Twitter](https://twitter.com/aheze0). Or read the source code — there's lots of comments.
 
 ## License
 
 ```
 MIT License
 
-Copyright (c) 2023 A. Zheng
+Copyright (c) 2022 A. Zheng
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

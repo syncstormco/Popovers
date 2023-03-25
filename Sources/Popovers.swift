@@ -6,7 +6,6 @@
 //  Copyright © 2022 A. Zheng. All rights reserved.
 //
 
-#if os(iOS)
 import SwiftUI
 
 /**
@@ -19,4 +18,3 @@ public enum Popovers {
     /// The delay after a bounds change before recalculating popover frames.
     public static var frameUpdateDelayAfterBoundsChange = CGFloat(0.6)
 }
-#endif

@@ -415,7 +415,7 @@ public extension Templates {
             } else {
                 image = nil
             }
-
+            
             self.red = red
 
             self.action = action
@@ -425,13 +425,13 @@ public extension Templates {
         public init(
             text: Text? = nil,
             image: Image? = nil,
-            red: Bool? = nil,
+            red: Bool? = nil
             _ action: @escaping (() -> Void)
         ) {
             self.text = text
             self.image = image
-            self.action = action
             self.red = red
+            self.action = action
         }
 
         public var body: some View {
@@ -440,12 +440,12 @@ public extension Templates {
                     if let text = text {
                         text
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .foregroundColor((red ?? false) ? Color(.systemRed) : .primary)
+                            .foregroundColor((red ?? false) ? Color(.systemRed) ? .primary)
                     }
 
                     if let image = image {
                         image
-                            .foregroundColor((red ?? false) ? Color(.systemRed) : .primary)
+                            .foregroundColor((red ?? false) ? Color(.systemRed) ? .primary)
                     }
                 }
                 .accessibilityElement(children: .combine) /// Merge text and image into a single element.

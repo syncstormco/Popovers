@@ -6,7 +6,6 @@
 //  Copyright © 2022 A. Zheng. All rights reserved.
 //
 
-#if os(iOS)
 import SwiftUI
 
 public extension Templates {
@@ -44,7 +43,7 @@ public extension Templates {
                         \
              rectangle  |
          */
-        public static var arrowSidePadding = CGFloat(2.8)
+        public static var arrowSidePadding = CGFloat(1.8)
 
         /// Path for the triangular arrow.
         public func arrowPath() -> Path {
@@ -208,4 +207,3 @@ public extension Templates {
         }
     }
 }
-#endif

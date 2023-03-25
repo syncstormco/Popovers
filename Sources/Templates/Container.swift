@@ -6,7 +6,6 @@
 //  Copyright © 2022 A. Zheng. All rights reserved.
 //
 
-#if os(iOS)
 import SwiftUI
 
 public extension Templates {
@@ -22,9 +21,6 @@ public extension Templates {
 
         /// The container's background/fill color.
         public var backgroundColor = Color(.systemBackground)
-
-        /// The shadow around the content view.
-        public var shadow: Shadow? = .system
 
         /// The padding around the content view.
         public var padding = CGFloat(16)
@@ -44,14 +40,12 @@ public extension Templates {
             arrowSide: Templates.ArrowSide? = nil,
             cornerRadius: CGFloat = CGFloat(12),
             backgroundColor: Color = Color(.systemBackground),
-            shadow: Shadow? = .system,
             padding: CGFloat = CGFloat(16),
             @ViewBuilder view: () -> Content
         ) {
             self.arrowSide = arrowSide
             self.cornerRadius = cornerRadius
             self.backgroundColor = backgroundColor
-            self.shadow = shadow
             self.padding = padding
             self.view = view()
         }
@@ -66,7 +60,12 @@ public extension Templates {
                             cornerRadius: cornerRadius
                         )
                         .fill(backgroundColor)
-                        .popoverShadowIfNeeded(shadow: shadow)
+                        .shadow(
+                            color: Color(.label.withAlphaComponent(0.25)),
+                            radius: 40,
+                            x: 0,
+                            y: 4
+                        )
                     )
             }
         }
@@ -106,4 +105,3 @@ public extension Templates {
         }
     }
 }
-#endif

@@ -6,7 +6,6 @@
 //  Copyright © 2022 A. Zheng. All rights reserved.
 //
 
-#if os(iOS)
 import SwiftUI
 
 /**
@@ -45,7 +44,10 @@ public struct WindowReader<Content: View>: View {
     public let view: (UIWindow?) -> Content
 
     /// The read window.
-    @StateObject var windowViewModel = WindowViewModel()
+    @State var window: UIWindow?
+
+    /// An environment value to pass down into your SwiftUI view.
+    @Environment(\.window) var environmentWindow
 
     /// Reads the `UIWindow` that hosts some SwiftUI content.
     public init(@ViewBuilder view: @escaping (UIWindow?) -> Content) {
@@ -53,30 +55,29 @@ public struct WindowReader<Content: View>: View {
     }
 
     public var body: some View {
-        view(windowViewModel.window)
-//            .id(windowViewModel.window)
+        view(window)
+            .environment(\.window, window)
             .background(
-                WindowHandlerRepresentable(windowViewModel: windowViewModel)
+                WindowHandlerRepresentable(binding: $window)
             )
-        
     }
 
     /// A wrapper view to read the parent window.
     private struct WindowHandlerRepresentable: UIViewRepresentable {
-        @ObservedObject var windowViewModel: WindowViewModel
+        var binding: Binding<UIWindow?>
 
         func makeUIView(context _: Context) -> WindowHandler {
-            return WindowHandler(windowViewModel: self.windowViewModel)
+            WindowHandler(binding: binding)
         }
 
         func updateUIView(_: WindowHandler, context _: Context) {}
     }
 
     private class WindowHandler: UIView {
-        var windowViewModel: WindowViewModel
+        @Binding var binding: UIWindow?
 
-        init(windowViewModel: WindowViewModel) {
-            self.windowViewModel = windowViewModel
+        init(binding: Binding<UIWindow?>) {
+            _binding = binding
             super.init(frame: .zero)
             backgroundColor = .clear
         }
@@ -89,16 +90,8 @@ public struct WindowReader<Content: View>: View {
         override func didMoveToWindow() {
             super.didMoveToWindow()
 
-            DispatchQueue.main.async {
-                /// Set the window.
-                self.windowViewModel.window = self.window
-            }
+            /// Set the window.
+            binding = window
         }
     }
 }
-
-class WindowViewModel: ObservableObject {
-    @Published var window: UIWindow?
-}
-
-#endif

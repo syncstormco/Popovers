@@ -6,14 +6,11 @@
 //  Copyright © 2022 A. Zheng. All rights reserved.
 //
 
-#if os(iOS)
 import SwiftUI
 
 /**
-  Frame tags are used to store the frames.
-    **Warning:** this won't update the parent view, so is only valid for use inside a popover.
-    If you need to use frame later, use `frameReader` instead.
-  */
+ Frame tags are used to store the frames
+ */
 
 /// Store a view's frame for later use.
 struct FrameTagModifier: ViewModifier {
@@ -26,7 +23,6 @@ struct FrameTagModifier: ViewModifier {
             content
                 .frameReader { frame in
                     self.frame = frame
-
                     if let window = window {
                         window.save(frame, for: tag)
                     }
@@ -90,4 +86,3 @@ public extension Optional where Wrapped: UIResponder {
         return .zero
     }
 }
-#endif

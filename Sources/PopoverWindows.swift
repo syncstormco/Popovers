@@ -6,7 +6,6 @@
 //  Copyright © 2022 A. Zheng. All rights reserved.
 //
 
-#if os(iOS)
 import SwiftUI
 
 /**
@@ -113,8 +112,18 @@ extension UIResponder {
         }
 
         print("[Popovers] - No `PopoverModel` present in responder chain (\(self)) - has the source view been installed into a window? Please file a bug report (https://github.com/aheze/Popovers/issues).")
-
+        
         return PopoverModel()
+    }
+}
+
+public extension UIResponder {
+    /**
+     Get a currently-presented popover with a tag. Returns `nil` if no popover with the tag was found.
+     - parameter tag: The tag of the popover to look for.
+     */
+    func popover(tagged tag: AnyHashable) -> Popover? {
+        return popoverModel.popover(tagged: tag)
     }
 }
 
@@ -136,4 +145,3 @@ extension EnvironmentValues {
         static var defaultValue: UIWindow? = nil
     }
 }
-#endif

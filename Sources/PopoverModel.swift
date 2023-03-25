@@ -6,7 +6,6 @@
 //  Copyright © 2022 A. Zheng. All rights reserved.
 //
 
-#if os(iOS)
 import Combine
 import SwiftUI
 
@@ -41,8 +40,7 @@ class PopoverModel: ObservableObject {
     /**
      Refresh the popovers with a new transaction.
 
-     This is called when the screen bounds changes - by setting a transaction for each popover,
-     the `PopoverContainerView` knows that it needs to animate a change (processed in `sizeReader`).
+     This is called when a popover's frame is being calculated.
      */
     func refresh(with transaction: Transaction?) {
         /// Set each popovers's transaction to the new transaction to keep the smooth animation.
@@ -61,18 +59,8 @@ class PopoverModel: ObservableObject {
 
     /// Removes a `Popover` from this model.
     func remove(_ popover: Popover) {
-        popovers.removeAll { $0 == popover }
-    }
-
-    /**
-     Remove all popovers, or optionally the ones tagged with a `tag` that you supply.
-     - parameter tag: If this isn't nil, only remove popovers tagged with this.
-     */
-    func removeAllPopovers(with tag: AnyHashable? = nil) {
-        if let tag = tag {
-            popovers.removeAll(where: { $0.attributes.tag == tag })
-        } else {
-            popovers.removeAll()
+        popovers.removeAll { candidate in
+            candidate == popover
         }
     }
 
@@ -86,11 +74,7 @@ class PopoverModel: ObservableObject {
      - parameter tag: The tag of the popover to look for.
      */
     func popover(tagged tag: AnyHashable) -> Popover? {
-        let matchingPopovers = popovers.filter { $0.attributes.tag == tag }
-        if matchingPopovers.count > 1 {
-            print("[Popovers] - Warning - There are \(matchingPopovers.count) popovers tagged '\(tag)'. Tags should be unique. Try dismissing all existing popovers first.")
-        }
-        return matchingPopovers.first
+        return popovers.first(where: { $0.attributes.tag == tag })
     }
 
     /**
@@ -123,4 +107,3 @@ class PopoverModel: ObservableObject {
         return frame ?? .zero
     }
 }
-#endif

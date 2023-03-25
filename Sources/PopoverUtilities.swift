@@ -6,8 +6,6 @@
 //  Copyright © 2022 A. Zheng. All rights reserved.
 //
 
-#if os(iOS)
-import Combine
 import SwiftUI
 
 public extension UIView {
@@ -32,14 +30,12 @@ public extension View {
     func frameReader(in coordinateSpace: CoordinateSpace = .global, rect: @escaping (CGRect) -> Void) -> some View {
         return background(
             GeometryReader { geometry in
-                let frame = geometry.frame(in: coordinateSpace)
-
                 Color.clear
-                    .onValueChange(of: frame) { _, newValue in
-                        rect(newValue)
-                    }
-                    .onAppear {
-                        rect(frame)
+                    .preference(key: ContentFrameReaderPreferenceKey.self, value: geometry.frame(in: coordinateSpace))
+                    .onPreferenceChange(ContentFrameReaderPreferenceKey.self) { newValue in
+                        DispatchQueue.main.async {
+                            rect(newValue)
+                        }
                     }
             }
             .hidden()
@@ -215,5 +211,3 @@ public extension View {
         }
     }
 }
-
-#endif

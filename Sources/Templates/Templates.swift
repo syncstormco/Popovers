@@ -6,7 +6,6 @@
 //  Copyright © 2022 A. Zheng. All rights reserved.
 //
 
-#if os(iOS)
 import SwiftUI
 
 /**
@@ -18,4 +17,3 @@ public enum Templates {
     /// Highlight color for the alert and menu buttons.
     public static var buttonHighlightColor = Color.secondary.opacity(0.2)
 }
-#endif

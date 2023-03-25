@@ -6,7 +6,6 @@
 //  Copyright © 2022 A. Zheng. All rights reserved.
 //
 
-#if os(iOS)
 import Combine
 import SwiftUI
 
@@ -62,7 +61,7 @@ struct PopoverModifier: ViewModifier {
     }
 
     func body(content: Content) -> some View {
-        WindowReader { readWindow in
+        WindowReader { window in
             content
 
                 /// Read the frame of the source view.
@@ -74,18 +73,9 @@ struct PopoverModifier: ViewModifier {
                 .onValueChange(of: present) { oldValue, newValue in
 
                     /// Make sure there is a window first.
-                    var window: UIWindow! = readWindow
-                    if window == nil {
-                        print("[Popovers] - No window was found when presenting popover, falling back to key window. Please file a bug report (https://github.com/aheze/Popovers/issues).")
-
-                        if let keyWindow = UIApplication.shared.windows.first(where: \.isKeyWindow) {
-                            window = keyWindow
-                        } else {
-                            print("[Popovers] - Key window was not found either, skipping popover presentation.")
-                            self.present = false
-                            self.popover = nil /// Remove the reference to the popover.
-                            return
-                        }
+                    guard let window = window else {
+                        print("[Popovers] - No window was found when presenting popover. Please file a bug report (https://github.com/aheze/Popovers/issues).")
+                        return
                     }
 
                     /// `newValue` is true, so present the popover.
@@ -145,10 +135,10 @@ struct PopoverModifier: ViewModifier {
  */
 struct MultiPopoverModifier: ViewModifier {
     /// The current selection. Present the popover when this equals `tag.`
-    @Binding var selection: AnyHashable?
+    @Binding var selection: String?
 
     /// The popover's tag.
-    let tag: AnyHashable
+    let tag: String
 
     /// Build the attributes.
     let buildAttributes: (inout Popover.Attributes) -> Void
@@ -166,17 +156,13 @@ struct MultiPopoverModifier: ViewModifier {
     @State var sourceFrame: CGRect?
 
     /// Create a popover. Use `.popover(selection:tag:attributes:view)` to access.
-    init<Selection: Hashable, Content: View>(
-        selection: Binding<Selection?>,
-        tag: Selection,
+    init<Content: View>(
+        selection: Binding<String?>,
+        tag: String,
         buildAttributes: @escaping ((inout Popover.Attributes) -> Void),
         @ViewBuilder view: @escaping () -> Content
     ) {
-        _selection = Binding {
-            selection.wrappedValue
-        } set: { newValue in
-            selection.wrappedValue = newValue as? Selection
-        }
+        _selection = selection
         self.tag = tag
         self.buildAttributes = buildAttributes
         self.view = AnyView(view())
@@ -184,18 +170,14 @@ struct MultiPopoverModifier: ViewModifier {
     }
 
     /// Create a popover with a background. Use `.popover(selection:tag:attributes:view:background:)` to access.
-    init<Selection: Hashable, MainContent: View, BackgroundContent: View>(
-        selection: Binding<Selection?>,
-        tag: Selection,
+    init<MainContent: View, BackgroundContent: View>(
+        selection: Binding<String?>,
+        tag: String,
         buildAttributes: @escaping ((inout Popover.Attributes) -> Void),
         @ViewBuilder view: @escaping () -> MainContent,
         @ViewBuilder background: @escaping () -> BackgroundContent
     ) {
-        _selection = Binding {
-            selection.wrappedValue
-        } set: { newValue in
-            selection.wrappedValue = newValue as? Selection
-        }
+        _selection = selection
         self.tag = tag
         self.buildAttributes = buildAttributes
         self.view = AnyView(view())
@@ -203,7 +185,7 @@ struct MultiPopoverModifier: ViewModifier {
     }
 
     func body(content: Content) -> some View {
-        WindowReader { readWindow in
+        WindowReader { window in
             content
 
                 /// Read the frame of the source view.
@@ -217,18 +199,9 @@ struct MultiPopoverModifier: ViewModifier {
                 .onValueChange(of: selection) { oldSelection, newSelection in
 
                     /// Make sure there is a window first.
-                    var window: UIWindow! = readWindow
-                    if window == nil {
-                        print("[Popovers] - No window was found when presenting popover, falling back to key window. Please file a bug report (https://github.com/aheze/Popovers/issues).")
-
-                        if let keyWindow = UIApplication.shared.windows.first(where: \.isKeyWindow) {
-                            window = keyWindow
-                        } else {
-                            print("[Popovers] - Key window was not found either, skipping popover presentation.")
-                            self.selection = nil
-                            self.popover = nil /// Remove the reference to the popover.
-                            return
-                        }
+                    guard let window = window else {
+                        print("[Popovers] - No window was found when presenting popover. Please file a bug report (https://github.com/aheze/Popovers/issues).")
+                        return
                     }
 
                     let model = window.popoverModel
@@ -263,7 +236,7 @@ struct MultiPopoverModifier: ViewModifier {
                             if case .absolute = attributes.position {
                                 return sourceFrame ?? .zero
                             } else {
-                                return window.bounds
+                                return window.safeAreaLayoutGuide.layoutFrame
                             }
                         }
 
@@ -353,9 +326,9 @@ public extension View {
      - parameter attributes: The popover's attributes.
      - parameter view: The popover's view.
      */
-    func popover<Selection: Hashable, Content: View>(
-        selection: Binding<Selection?>,
-        tag: Selection,
+    func popover<Content: View>(
+        selection: Binding<String?>,
+        tag: String,
         attributes buildAttributes: @escaping ((inout Popover.Attributes) -> Void) = { _ in },
         @ViewBuilder view: @escaping () -> Content
     ) -> some View {
@@ -377,9 +350,9 @@ public extension View {
      - parameter view: The popover's view.
      - parameter background: The popover's background.
      */
-    func popover<Selection: Hashable, MainContent: View, BackgroundContent: View>(
-        selection: Binding<Selection?>,
-        tag: Selection,
+    func popover<MainContent: View, BackgroundContent: View>(
+        selection: Binding<String?>,
+        tag: String,
         attributes buildAttributes: @escaping ((inout Popover.Attributes) -> Void) = { _ in },
         @ViewBuilder view: @escaping () -> MainContent,
         @ViewBuilder background: @escaping () -> BackgroundContent
@@ -395,4 +368,3 @@ public extension View {
         )
     }
 }
-#endif

@@ -6,7 +6,6 @@
 //  Copyright © 2022 A. Zheng. All rights reserved.
 //
 
-#if os(iOS)
 import SwiftUI
 
 /**
@@ -57,30 +56,19 @@ struct PopoverContainerView: View {
 
                     /// Read the popover's size in the view.
                     .sizeReader(transaction: popover.context.transaction) { size in
-
-                        if
-                            let transaction = popover.context.transaction,
-                            let existingSize = popover.context.size
-                        {
-                            /// If the size is different during an existing transaction, this means
-                            /// the size is still not final and can change.
-                            /// So, update without an animation - but just make sure it's not replacing an existing one.
-                            if existingSize != size, !popover.context.isReplacement {
+                        if let transaction = popover.context.transaction {
+                            /// When `popover.context.size` is nil, the popover was just presented.
+                            if popover.context.size == nil {
                                 popover.updateFrame(with: size)
-                                popoverModel.reload()
+                                popoverModel.refresh(with: transaction)
                             } else {
-                                /// Otherwise, since the size is the same, the popover is *replacing* a previous popover - animate it.
-                                /// This could also be true when the screen bounds changed.
+                                /// Otherwise, the popover is *replacing* a previous popover, so animate it.
                                 withTransaction(transaction) {
                                     popover.updateFrame(with: size)
-                                    popoverModel.reload()
+                                    popoverModel.refresh(with: transaction)
                                 }
                             }
                             popover.context.transaction = nil
-                        } else {
-                            /// When `popover.context.size` is nil or there is no transaction, the popover was just presented.
-                            popover.updateFrame(with: size)
-                            popoverModel.reload()
                         }
                     }
 
@@ -155,7 +143,7 @@ struct PopoverContainerView: View {
                         removal: popover.attributes.dismissal.transition ?? .opacity
                     )
                 )
-
+                
                 /// Clean up the container view.
                 .onDisappear {
                     popover.context.onDisappear?()
@@ -190,7 +178,6 @@ struct PopoverContainerView: View {
             width: frame.origin.x + ((selectedPopover == popover) ? selectedPopoverOffset.width : 0),
             height: frame.origin.y + ((selectedPopover == popover) ? selectedPopoverOffset.height : 0)
         )
-
         return offset
     }
 
@@ -263,4 +250,3 @@ struct PopoverContainerView: View {
         return selectedPopoverOffset
     }
 }
-#endif
